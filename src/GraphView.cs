@@ -1,6 +1,8 @@
 using Godot;
-using System;
-namespace  RuleFlowRenderEngine.server;
+using System.Buffers.Binary;
+using  RuleFlowRenderEngine.server;
+
+namespace RuleFlowRenderEngine;
 
 public partial class GraphView : Control
 {
@@ -9,7 +11,7 @@ public partial class GraphView : Control
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		Server t = new Server();
+		// Server t = new Server();
 		// instantiate server here...
 		GetNode<Button>("Button").Pressed += OnButtonPressed;
 	}
@@ -17,8 +19,12 @@ public partial class GraphView : Control
 	void OnButtonPressed()
 	{
 		var l = GetNode<RichTextLabel>("label");
-		l.AddText("\nTest " + i);
+		l.AddText("\n\nTest " + i);
 		i++;
+		// TODO: make first version of Studio Plugin...
+		// TODO: test the server
+		// TODO: make the connection screen
+		// TODO: make the graph rendering
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

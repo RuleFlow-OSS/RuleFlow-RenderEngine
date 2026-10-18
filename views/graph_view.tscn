@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bxnw6023n5cho"]
 
-[ext_resource type="Script" uid="uid://u63iyuedrubr" path="res://src/server/GraphView.cs" id="1_cq37j"]
+[ext_resource type="Script" uid="uid://u63iyuedrubr" path="res://src/GraphView.cs" id="1_cq37j"]
 
 [node name="GraphView" type="Control" unique_id=2033580171]
 layout_mode = 3

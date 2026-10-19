@@ -4,10 +4,10 @@ namespace RuleFlowRenderEngine.server;
 
 public class MessageChannels
 {
-    /// Received messages are stored in the order they are received.
+    /// Incoming messages are stored in the order they are received.
     public Channel<Message> IncomingChannel { get; } = Channel.CreateBounded<Message>(Config.MaxMessageChannelSize);
 
-    /// Messages are sent in the order they are enqueued.
+    /// Outgoing messages are sent in the order they are enqueued.
     public Channel<Message> OutgoingChannel { get; } = Channel.CreateBounded<Message>(Config.MaxMessageChannelSize);
     
     /// Gets the Incoming Reader

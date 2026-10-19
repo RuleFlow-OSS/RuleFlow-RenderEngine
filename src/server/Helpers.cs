@@ -10,16 +10,17 @@ namespace RuleFlowRenderEngine.server;
 
 
 /// <summary>
-/// A static class that provides configuration options. 
+/// A static class that provides configuration options.
+/// IMPORTANT: This class must be kept up to date with the client side configuration.
 /// </summary>
-public static partial class Config
+public static class Config
 {
     public const int Port = 31415;
     public const int MaxMessageLength = 10485760; // 10 * 1024 * 1024 = 10485760 (that is 10MB)
     public const int MaxMessageChannelSize = 2048;
     public static readonly SqidsOptions SqidsCfg = new SqidsOptions()
     {
-        Alphabet = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        Alphabet = "123456789ABCDEFGHIJKLMNPQRSTUVWXYZ"
     };
 
     public static readonly JsonSerializerOptions JsonSerializeOptions = new()
@@ -101,7 +102,7 @@ public static class NetworkHelpers
 
 public static class IpAddressSqidsEncoding
 {
-    public static SqidsEncoder<uint> Sqids { get; } = new SqidsEncoder<uint>(Config.SqidsCfg);
+    public static SqidsEncoder<uint> Sqids { get; } = new(Config.SqidsCfg);
 
     public static string Encode(IPAddress ip)
     {

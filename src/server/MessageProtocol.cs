@@ -9,7 +9,7 @@ namespace RuleFlowRenderEngine.server;
 /// <summary>
 /// <c>Message</c> is an ABC that supported polymorphic JSON serialization.
 /// </summary>
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "Type")]
 [JsonDerivedType(typeof(EventMessage), typeDiscriminator: "event")]
 [JsonDerivedType(typeof(CommandMessage), typeDiscriminator: "command")]
 public abstract class Message

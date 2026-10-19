@@ -1,15 +1,15 @@
 [gd_scene format=3 uid="uid://bxnw6023n5cho"]
 
-[ext_resource type="Script" uid="uid://u63iyuedrubr" path="res://src/GraphView.cs" id="1_cq37j"]
+[ext_resource type="Script" uid="uid://u63iyuedrubr" path="res://src/Main.cs" id="1_kvnai"]
 
-[node name="GraphView" type="Control" unique_id=2033580171]
+[node name="Main" type="Control" unique_id=2033580171]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_cq37j")
+script = ExtResource("1_kvnai")
 
 [node name="label" type="RichTextLabel" parent="." unique_id=1248510795]
 layout_mode = 0

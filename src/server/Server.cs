@@ -12,42 +12,50 @@ namespace RuleFlowRenderEngine.server;
 
 public class Server
 {
+    /// Fired immediately when a client connects and streams are ready.
+    public event Action OnConnected;
+    
+    /// Fired when an active client session ends and cleanup is complete.
+    public event Action OnDisconnected;
+    
+    /// Fired whenever the FSM completely exits (whether from WaitingState or ConnectedState).
+    public event Action OnStopped;
+    
     /// True when the FSM is active.
-    public bool Awake { get; private set; } = false;  
+    public bool Awake { get; private set; }
     
     /// Tells us if a client has been connected.
-    public bool ClientConnected { get; private set; } = false;
+    public bool ClientConnected { get; private set; }
     
     /// This is what handles incoming and outgoing message logic.
-    private readonly MessageChannels _messageChannels = new();
-    public MessageChannels GetMessageHandler() => _messageChannels;
+    public readonly MessageChannels MessageChannels = new();
     
     // This section is internal functionality
-    public readonly TcpListener ServerSocket = new(IPAddress.Any, Config.Port);
-    public TcpClient ClientSocket;
-    public CancellationTokenSource Cts;
-    public CancellationToken Ct;
+    private TcpListener ServerSocket { get; } = new(IPAddress.Any, Config.Port);
+    private TcpClient ClientSocket { get; set; }
+    private CancellationTokenSource Cts { get; set; }
+    private CancellationToken Ct { get; set; }
     
     /// Enter the FSM in a new thread
     public void Start()
     {
+        
         if (Awake) return;
         Awake = true;
         Cts = new CancellationTokenSource();
         Ct = Cts.Token;
-        Task.Run(WaitingState);
-    } 
+        Task.Run(WaitingState);  // we don't use Ct in the Run due do wanting WaitingState to properly handle cancellation.
+    }
 
     /// Cancel the current session
     public void Stop()
     {
         if (!Awake) return;
-        try { Cts?.Cancel(); }
-        catch (ObjectDisposedException) { }
+        Cts?.Cancel();
     }
     
     // ======== FSM States (primary transition code is defined within state) ========
-    async Task WaitingState()
+    private async Task WaitingState()
     {
         ServerSocket.Start();
         try
@@ -55,11 +63,12 @@ public class Server
             // We wait here until there is a client in the queue.
             ClientSocket = await ServerSocket.AcceptTcpClientAsync(Ct);
         }
-        catch (Exception ex) when (ex is SocketException or OperationCanceledException)
+        catch (Exception e) when (e is SocketException or OperationCanceledException)
         {
             ServerSocket.Stop();
             Cts.Dispose();
             Awake = false;
+            OnStopped?.Invoke();
             return;
         }
         ServerSocket.Stop();
@@ -68,27 +77,30 @@ public class Server
         try
         {
             ClientConnected = true;
-            using NetworkStream stream = ClientSocket.GetStream();
-            Task outgoingData = ProcessOutgoingQueue(stream);
-            Task incomingData = ConnectedState(stream);
+            OnConnected?.Invoke();
+            await using var stream = ClientSocket.GetStream();
+            var outgoingData = ProcessOutgoingChannel(stream);
+            var incomingData = ConnectedState(stream);
             await Task.WhenAny(incomingData, outgoingData);
-            await Cts.CancelAsync(); // we have this for robustness... if something happens to one of the processes, cancel all.
+            await Cts.CancelAsync(); // we have this for robustness... if something happens to one of the tasks, cancel all.
             await Task.WhenAll(incomingData, outgoingData);
         }
-        finally
+        finally // all exceptions should be handled by transitions
         {
             // Exit FSM
             ClientSocket.Close();
             Cts.Dispose();
-            _messageChannels.Drain();
+            MessageChannels.Drain();
             ClientConnected = false;
             Awake = false;
+            OnDisconnected?.Invoke();  // note: important that this is after fields are set in case the callback invokes start again...
+            OnStopped?.Invoke();
         }
     }
     
-    async Task ConnectedState(NetworkStream stream)
+    private async Task ConnectedState(NetworkStream stream)
     {
-        ChannelWriter<Message> channelWriter = _messageChannels.GetIncomingWriter();
+        ChannelWriter<Message> channelWriter = MessageChannels.GetIncomingWriter();
         byte[] lengthBuffer = new byte[4];
         try
         {
@@ -99,7 +111,7 @@ public class Server
                 if (messageLength is <= 0 or > Config.MaxMessageLength)
                 {
                     Console.WriteLine($"A message of length {messageLength} could not be parsed.");
-                    continue;
+                    break;
                 }
                 byte[] messageBuffer = new byte[messageLength];
                 await stream.ReadExactlyAsync(messageBuffer, 0, messageLength, Ct);
@@ -115,7 +127,7 @@ public class Server
                 }
             }
         } // all errors regarding the reading buffer must break the loop because we lose position.
-        catch (EndOfStreamException){}
+        catch (EndOfStreamException){}  // EOF indicates that the TCP connected has been closed.
         catch (OperationCanceledException){}
         catch (Exception e)
         {
@@ -123,11 +135,11 @@ public class Server
         }
     }
     
-    async Task ProcessOutgoingQueue(NetworkStream stream)
+    private async Task ProcessOutgoingChannel(NetworkStream stream)
     {
         try
         {
-            ChannelReader<Message> channelReader = _messageChannels.GetOutgoingReader();
+            ChannelReader<Message> channelReader = MessageChannels.GetOutgoingReader();
             await foreach (Message message in channelReader.ReadAllAsync(Ct))
             {
                 var messageBytes = (ReadOnlyMemory<byte>)message.ToBytes();

@@ -10,6 +10,7 @@ namespace RuleFlowRenderEngine;
 /// <summary>
 /// Provides threading utilities for the app side.
 /// The utils provided should be used primarily for communication between Godot's Main Thread and Other Threads.
+/// Example uses when be for callbacks subscribed to Server events.
 /// </summary>
 public static class ThreadUtils
 {
@@ -27,7 +28,7 @@ public static class ThreadUtils
     /// </summary>
     public static Action<T> Cft<T>(Action<T> action)
     {
-        return (T arg) => Callable.From(() => action(arg)).CallDeferred();
+        return (arg) => Callable.From(() => action(arg)).CallDeferred();
     }
 }
 
@@ -37,7 +38,7 @@ public static class ThreadUtils
 /// </summary>
 public class Controller
 {
-    // ==== Callbacks/Events/Signals ====
+    // ==== Events ====
     public event Action<CommandMessage> OnPingPongReceived;
     public event Action<CommandMessage> OnCommandMessageReceived;
     public event Action<EventMessage> OnEventMessageReceived;
@@ -131,9 +132,8 @@ public class Controller
     /// </summary>
     public bool ping_client(string op = "ping", string args = "Server Says Hi!")
     {
-        if (op is "ping" or "pong")
-            return SendMessage(new CommandMessage() { Op = op, Args = args });
-        else 
-            throw new ArgumentException("Must be 'ping' or 'pong'", nameof(op));;
+        return op is "ping" or "pong" ? 
+            SendMessage(new CommandMessage() { Op = op, Args = args }) : 
+            throw new ArgumentException("Must be 'ping' or 'pong'", nameof(op));
     }
 }

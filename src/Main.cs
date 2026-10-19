@@ -1,7 +1,12 @@
-using System;
+/*
+Types of command messages:
+(Server <> Client) - ping/pong
+(Server -> Client) - regress(n)
+(Server -> Client) - evolve(n)
+(Server <- Client) - highlight_cells(n, ...)
+(Client -> Server) - highlight_nodes(n, ...)
+*/
 using Godot;
-using System.Threading.Channels;
-using System.Threading.Tasks;
 using  RuleFlowRenderEngine.server;
 
 namespace RuleFlowRenderEngine;

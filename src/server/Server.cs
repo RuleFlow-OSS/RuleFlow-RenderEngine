@@ -31,15 +31,14 @@ public class Server
     public readonly MessageChannels MessageChannels = new();
     
     // This section is internal functionality
-    private TcpListener ServerSocket { get; } = new(IPAddress.Any, Config.Port);
-    private TcpClient ClientSocket { get; set; }
-    private CancellationTokenSource Cts { get; set; }
-    private CancellationToken Ct { get; set; }
+    public TcpListener ServerSocket { get; } = new(IPAddress.Any, Config.Port);
+    public TcpClient ClientSocket { get; set; }
+    public CancellationTokenSource Cts { get; set; }
+    public CancellationToken Ct { get; set; }
     
     /// Enter the FSM in a new thread
     public void Start()
     {
-        
         if (Awake) return;
         Awake = true;
         Cts = new CancellationTokenSource();

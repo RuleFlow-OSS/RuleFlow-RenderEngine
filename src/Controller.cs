@@ -1,5 +1,12 @@
-﻿using Godot;
+﻿/*
+Types of command messages:
+(Server <> Client) - ping/pong
+(Server <- Client) - clear()
+(Server <- Client) - regress(n)
+*/
+using Godot;
 using System;
+using System.Linq;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using RuleFlowRenderEngine.server;
@@ -8,33 +15,7 @@ namespace RuleFlowRenderEngine;
 
 
 /// <summary>
-/// Provides threading utilities for the app side.
-/// The utils provided should be used primarily for communication between Godot's Main Thread and Other Threads.
-/// Example uses when be for callbacks subscribed to Server events.
-/// </summary>
-public static class ThreadUtils
-{
-    /// <summary>
-    /// Wraps an Action so that when it is invoked, it executes safely on Godot's Main Thread.
-    /// </summary>
-    public static Action Cft(Action action)
-    {
-        // Return a new action that handles the internal Godot deferral
-        return () => Callable.From(action).CallDeferred();
-    }
-
-    /// <summary>
-    /// Wraps a generic Action with one argument for deferred execution.
-    /// </summary>
-    public static Action<T> Cft<T>(Action<T> action)
-    {
-        return (arg) => Callable.From(() => action(arg)).CallDeferred();
-    }
-}
-
-
-/// <summary>
-/// Handles the business logic...
+/// Handles the main logic of running the server and triggering events.
 /// </summary>
 public class Controller
 {
@@ -45,7 +26,7 @@ public class Controller
     
     
     // ==== Object properties ====
-    private Server Server { get; } = new();
+    public Server Server { get; } = new();
     private ChannelWriter<Message> ChannelWriter { get; }
     /// when true, the server switches back into its listening state after a connection is dropped.
     private volatile bool _keepServerAlive;
@@ -59,7 +40,15 @@ public class Controller
         
         // subscribed for logging purposes
         OnPingPongReceived += (msg) => Console.WriteLine($"Ping/Pong: {msg.Op} - {msg.Args}");
-        OnEventMessageReceived += (msg) => Console.WriteLine($"Event: {msg.Time}");  // TODO test line
+    }
+    
+    /// <summary>
+    /// Wraps an Action so that when it is invoked, it executes safely on Godot's Main Thread.
+    /// </summary>
+    public static Action Cft(Action action)
+    {
+        // Return a new action that handles the internal Godot deferral
+        return () => Callable.From(action).CallDeferred();
     }
     
     public void StartServer()
@@ -95,14 +84,13 @@ public class Controller
             switch (message)
             {
                 case EventMessage em:
-                    // TODO: connect to internal Causal Network
                     OnEventMessageReceived?.Invoke(em);
                     break;
                 case CommandMessage cm:
                     switch (cm.Op)
                     {
                         case "ping":
-                            ping_client(op: "pong");
+                            PingClient(op: "pong");
                             OnPingPongReceived?.Invoke(cm);
                             break;
                         case "pong":
@@ -130,7 +118,7 @@ public class Controller
     /// <summary>
     /// Ping the client.
     /// </summary>
-    public bool ping_client(string op = "ping", string args = "Server Says Hi!")
+    public bool PingClient(string op = "ping", string args = "Server Says Hi!")
     {
         return op is "ping" or "pong" ? 
             SendMessage(new CommandMessage() { Op = op, Args = args }) : 

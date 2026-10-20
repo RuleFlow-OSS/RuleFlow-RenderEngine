@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://c475xg3ebcpmj"]
 
 [ext_resource type="FontFile" uid="uid://ddhwd8cew7kkl" path="res://assets/fonts/OCRAEXT.TTF" id="1_n0413"]
+[ext_resource type="Script" uid="uid://bpdcf1le62fhs" path="res://src/ConnectView.cs" id="1_v2itp"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_48d6w"]
 font = ExtResource("1_n0413")
-font_size = 50
+font_size = 40
 
 [node name="Control" type="Control" unique_id=2033580171]
 layout_mode = 3
@@ -13,6 +14,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_v2itp")
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1076013223]
 layout_mode = 1
@@ -25,44 +27,72 @@ grow_vertical = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1592023135]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer" unique_id=354351014]
+[node name="Header" type="Label" parent="CenterContainer/VBoxContainer" unique_id=354351014]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
-text = "RuleFlow RenderEngine"
+text = "RuleFlow-RenderEngine"
 label_settings = SubResource("LabelSettings_48d6w")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="connect" type="HBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=1330550923]
+[node name="ConnectionCode" type="RichTextLabel" parent="CenterContainer/VBoxContainer" unique_id=1969286687]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
-size_flags_horizontal = 4
+tooltip_text = "Enter this code in RuleFlow Studio."
+focus_mode = 2
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+text = "Connection Code: [b][color=lightblue]<code>[/color][/b]"
+scroll_active = false
+autowrap_mode = 0
+autowrap_trim_flags = 0
+context_menu_enabled = true
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 0
+meta_underlined = false
+hint_underlined = false
+selection_enabled = true
 
-[node name="LineEdit" type="LineEdit" parent="CenterContainer/VBoxContainer/connect" unique_id=14186633]
-custom_minimum_size = Vector2(256, 0)
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=1330550923]
 layout_mode = 2
-size_flags_horizontal = 4
-placeholder_text = "Connection Pin"
+alignment = 1
 
-[node name="Button" type="Button" parent="CenterContainer/VBoxContainer/connect" unique_id=971745455]
+[node name="IpSelection" type="OptionButton" parent="CenterContainer/VBoxContainer/HBoxContainer" unique_id=1512955405]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "LocalHost: If RuleFlow Studio is running on your computer.
+LAN: If RuleFlow Studio is on a computer on the same local network (e.g. Campus Network or Home Network).
+WAN: If RuleFlow Studio is on a remote computer not on your local network (e.g. the next town over)."
+selected = 0
+item_count = 3
+popup/item_0/text = "LocalHost"
+popup/item_0/id = 0
+popup/item_1/text = "Local Area Network (LAN)"
+popup/item_1/id = 1
+popup/item_2/text = "Wide Area Network (WAN)"
+popup/item_2/id = 2
+
+[node name="StartStopServerBtn" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer" unique_id=971745455]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 size_flags_horizontal = 4
-text = "Connect"
+text = "Start Server"
 
-[node name="waiting" type="HBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=1674960239]
+[node name="WaitingIndicator" type="ProgressBar" parent="." unique_id=726117678]
+unique_name_in_owner = true
 visible = false
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -27.0
+grow_horizontal = 2
+grow_vertical = 0
 size_flags_horizontal = 4
-
-[node name="ProgressBar" type="ProgressBar" parent="CenterContainer/VBoxContainer/waiting" unique_id=726117678]
-custom_minimum_size = Vector2(256, 0)
-layout_mode = 2
-size_flags_horizontal = 4
+show_percentage = false
 indeterminate = true
 editor_preview_indeterminate = false
-
-[node name="Button" type="Button" parent="CenterContainer/VBoxContainer/waiting" unique_id=1053869380]
-custom_minimum_size = Vector2(128, 0)
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Cancel"

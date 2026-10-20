@@ -1,0 +1,127 @@
+[gd_scene format=3 uid="uid://co5xvg1iv1qob"]
+
+[ext_resource type="Script" uid="uid://bpm2f4hqrbh6b" path="res://src/GraphView.cs" id="1_cq37j"]
+[ext_resource type="FontFile" uid="uid://ddhwd8cew7kkl" path="res://assets/fonts/OCRAEXT.TTF" id="1_d2qx4"]
+[ext_resource type="Script" uid="uid://bbo1hnrjwvtlg" path="res://addons/force_directed_graph/force_directed_graph.gd" id="2_ojf0c"]
+[ext_resource type="Script" uid="uid://cphe0foss7apa" path="res://views/sub_viewport_camera.gd" id="3_ewg0i"]
+[ext_resource type="Script" uid="uid://c4scauw3fkv8p" path="res://addons/force_directed_graph/fdg_node.gd" id="3_keb8b"]
+[ext_resource type="Script" uid="uid://b2xspdu1vcw1f" path="res://addons/force_directed_graph/fdg_spring.gd" id="4_ewg0i"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_cq37j"]
+font = ExtResource("1_d2qx4")
+font_size = 24
+
+[node name="Control" type="Control" unique_id=2033580171]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cq37j")
+
+[node name="Header" type="Label" parent="." unique_id=1019324395]
+layout_mode = 0
+offset_right = 331.0
+offset_bottom = 46.0
+text = "RuleFlow-RenderEngine"
+label_settings = SubResource("LabelSettings_cq37j")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Footer" type="HBoxContainer" parent="." unique_id=1885117749]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -40.0
+offset_right = -40.0
+offset_bottom = -9.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 2
+
+[node name="ConnectedLabel" type="RichTextLabel" parent="Footer" unique_id=148294172]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "[color=green]Client Connected[/color]"
+vertical_alignment = 1
+
+[node name="PingClientBtn" type="Button" parent="Footer" unique_id=1058940147]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Ping Client"
+
+[node name="DisconnectBtn" type="Button" parent="Footer" unique_id=371938243]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Disconnect"
+
+[node name="SubViewPanel" type="PanelContainer" parent="." unique_id=1390311249]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 48.0
+offset_right = -32.0
+offset_bottom = -48.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1160043791]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 48.0
+offset_right = -32.0
+offset_bottom = -48.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=2105932833]
+disable_3d = true
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1088, 552)
+render_target_update_mode = 4
+
+[node name="Camera2D" type="Camera2D" parent="SubViewportContainer/SubViewport" unique_id=2121208163]
+anchor_mode = 0
+script = ExtResource("3_ewg0i")
+
+[node name="ForceDirectedGraph" type="Node2D" parent="SubViewportContainer/SubViewport" unique_id=524092045]
+unique_name_in_owner = true
+position = Vector2(619, 304)
+script = ExtResource("2_ojf0c")
+frame_divide = 177
+metadata/_custom_type_script = "uid://bbo1hnrjwvtlg"
+
+[node name="FDGNode" type="Node2D" parent="SubViewportContainer/SubViewport/ForceDirectedGraph" unique_id=1165827278]
+position = Vector2(19.560238, 12.756388)
+script = ExtResource("3_keb8b")
+radius = 16.0
+draw_point = true
+metadata/_custom_type_script = "uid://c4scauw3fkv8p"
+
+[node name="FDGSpring" type="Line2D" parent="SubViewportContainer/SubViewport/ForceDirectedGraph/FDGNode" unique_id=1769777776 node_paths=PackedStringArray("node_start", "node_end")]
+width = 2.0
+script = ExtResource("4_ewg0i")
+length = 200.0
+node_start = NodePath("..")
+node_end = NodePath("../../FDGNode2")
+metadata/_custom_type_script = "uid://b2xspdu1vcw1f"
+
+[node name="FDGNode2" type="Node2D" parent="SubViewportContainer/SubViewport/ForceDirectedGraph" unique_id=781459449]
+position = Vector2(-147.76242, -96.36683)
+script = ExtResource("3_keb8b")
+radius = 16.0
+draw_point = true
+metadata/_custom_type_script = "uid://c4scauw3fkv8p"

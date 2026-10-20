@@ -1,41 +1,53 @@
 /*
-Types of command messages:
-(Server <> Client) - ping/pong
-(Server -> Client) - regress(n)
-(Server -> Client) - evolve(n)
-(Server <- Client) - highlight_cells(n, ...)
-(Client -> Server) - highlight_nodes(n, ...)
-*/
+Note: due to using a controller node design, running some scenes individually may cause errors. Consider using the
+autoloaded singleton pattern at some point to make this more versatile.
+ */
+
+using System;
 using Godot;
-using  RuleFlowRenderEngine.server;
 
 namespace RuleFlowRenderEngine;
 
 public partial class Main : Control
 {
-	private Controller Controller { get; } = new();  // logic implementation...
+	// Controllers
+	public static Main Instance { get; private set; }  // make this follow a singleton pattern...
+	public static Controller Controller { get; } = new();  // make a singleton...
 	
-	// Called when the node enters the scene tree for the first time.
+	// Access Fields
+	public ConnectView ConnectView;
+	public GraphView GraphView;
+	
 	public override void _Ready()
 	{
-		GetNode<Button>("Button").Pressed += OnButtonPressed;
-		Controller.StartServer();
-	}
-	
-	void OnButtonPressed()
-	{
-		var l = GetNode<RichTextLabel>("label");
-		var loopback = NetworkHelpers.LocalHost;
-		var lan = NetworkHelpers.GetLocalIpAddress();
-		var wan = NetworkHelpers.GetGlobalIpAddress();
-		l.AddText($"\n{loopback}");
-		l.AddText($"\n{IpAddressSqidsEncoding.Encode(loopback)}");
-		l.AddText($"\n{lan}");
-		l.AddText($"\n{IpAddressSqidsEncoding.Encode(lan)}");
-		l.AddText($"\n{wan}");
-		l.AddText($"\n{IpAddressSqidsEncoding.Encode(wan)}");
+		// Can place Controller.StartServer() here if we need to test without relying on UI...
+		Instance = this;  // give global access...
+		
+		// Grab nodes
+		ConnectView = GetNode<ConnectView>("ConnectView");
+		GraphView = GetNode<GraphView>("GraphView");
+		
+		// Set defaults
+		OS.LowProcessorUsageMode = true;
+		
+		// wire up events
+		Controller.Server.OnConnected += Controller.Cft(() => SwitchViews("graph"));
+		Controller.Server.OnDisconnected += Controller.Cft(() => SwitchViews("connect"));
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta) { }
+	public void SwitchViews(string viewName)
+	{
+		switch (viewName)
+		{
+			case "connect":
+				ConnectView.Visible = true;
+				GraphView.Visible = false;
+				break;
+			case "graph":
+				ConnectView.Visible = false;
+				GraphView.Visible = true;
+				GraphView.ViewStarted();
+				break;
+		}
+	}
 }

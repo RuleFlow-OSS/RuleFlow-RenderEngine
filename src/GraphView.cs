@@ -1,6 +1,6 @@
 /*
 Note: currently we use a ForceDirectedGraph plugin... later we will transition to a custom network visualizer
-user GPU compute shaders and/or optimized Graph libraries.
+using GPU compute shaders and/or optimized Graph libraries.
 */
 using System.Net;
 using Godot;
@@ -51,11 +51,11 @@ public partial class GraphView : Control
 	
 	public void HandleCommandMessage(CommandMessage msg)
 	{
-		// Handle command messages.
+		// TODO: Handle command messages.
 	}
 	
 	public void HandleEventMessage(EventMessage msg)
 	{
-		// Handle adding nodes to the ForceDirectedGraph.
+		// TODO: Handle adding nodes to the ForceDirectedGraph.
 	}
 }

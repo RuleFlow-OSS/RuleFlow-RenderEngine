@@ -20,7 +20,7 @@ var connection: Line2D
 
 func _ready():
 	width = 4.0
-	antialiased = true
+	antialiased = false
 
 
 ## Connects the two nodes to the spring

@@ -38,4 +38,3 @@ enabled=PackedStringArray("res://addons/easynotify/plugin.cfg", "res://addons/fo
 [rendering]
 
 rendering_device/driver.windows="d3d12"
-anti_aliasing/quality/msaa_2d=1

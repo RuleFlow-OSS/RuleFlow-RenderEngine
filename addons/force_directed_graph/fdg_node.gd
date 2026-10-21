@@ -14,7 +14,7 @@ var last_position := Vector2(0, 0)
 ## Whether the node is pinned down. If true, the node will not move.
 @export var pinned_down: bool = false
 ## The radius of the node.
-@export var radius := 50.0
+@export var radius := 16
 ## The mass of the node.
 @export var mass := 1.0
 ## The repulsion force of the node.
@@ -31,7 +31,7 @@ var last_position := Vector2(0, 0)
 
 @export_category("Visuals")
 ## Whether to draw the node as a point.
-@export var draw_point: bool = false : set = _set_draw_point
+@export var draw_point: bool = true : set = _set_draw_point
 ## The color of the point.
 @export var point_color: Color = Color.WHITE : set = _set_point_color
 

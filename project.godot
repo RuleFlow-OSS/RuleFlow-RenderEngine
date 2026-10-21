@@ -13,7 +13,6 @@ config_version=5
 config/name="RuleFlowRenderEngine"
 run/main_scene="uid://bxnw6023n5cho"
 config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
-run/low_processor_mode=true
 config/icon="res://icon.svg"
 
 [autoload]
@@ -30,7 +29,7 @@ project/assembly_name="RuleFlowRenderEngine"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/TopDownCamera2D/plugin.cfg", "res://addons/easynotify/plugin.cfg", "res://addons/force_directed_graph/plugin.cfg")
+enabled=PackedStringArray("res://addons/easynotify/plugin.cfg", "res://addons/force_directed_graph/plugin.cfg")
 
 [physics]
 
@@ -39,3 +38,4 @@ enabled=PackedStringArray("res://addons/TopDownCamera2D/plugin.cfg", "res://addo
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+anti_aliasing/quality/msaa_2d=1

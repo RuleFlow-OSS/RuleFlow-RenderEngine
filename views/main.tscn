@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://u63iyuedrubr" path="res://src/Main.cs" id="1_kvnai"]
 [ext_resource type="PackedScene" uid="uid://c475xg3ebcpmj" path="res://views/connect.tscn" id="2_71m0o"]
-[ext_resource type="PackedScene" uid="uid://co5xvg1iv1qob" path="res://views/graph_view.tscn" id="3_e1crh"]
+[ext_resource type="PackedScene" uid="uid://co5xvg1iv1qob" path="res://views/events.tscn" id="3_e1crh"]
 
 [node name="Main" type="Control" unique_id=2033580171]
 layout_mode = 3

@@ -1,0 +1,162 @@
+[gd_scene format=3 uid="uid://co5xvg1iv1qob"]
+
+[ext_resource type="Script" uid="uid://bpm2f4hqrbh6b" path="res://src/EventView.cs" id="1_cq37j"]
+[ext_resource type="FontFile" uid="uid://ddhwd8cew7kkl" path="res://assets/fonts/OCRAEXT.TTF" id="1_d2qx4"]
+[ext_resource type="Script" uid="uid://bbo1hnrjwvtlg" path="res://addons/force_directed_graph/force_directed_graph.gd" id="2_ojf0c"]
+[ext_resource type="Script" uid="uid://cphe0foss7apa" path="res://views/sub_viewport_camera.gd" id="3_ewg0i"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_cq37j"]
+font = ExtResource("1_d2qx4")
+font_size = 24
+
+[node name="Control" type="Control" unique_id=2033580171]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cq37j")
+
+[node name="Header" type="Label" parent="." unique_id=1019324395]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -360.0
+offset_right = -29.0
+offset_bottom = 46.0
+grow_horizontal = 0
+text = "RuleFlow-RenderEngine"
+label_settings = SubResource("LabelSettings_cq37j")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Footer" type="HBoxContainer" parent="." unique_id=1885117749]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -40.0
+offset_right = -40.0
+offset_bottom = -9.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 2
+
+[node name="ConnectedLabel" type="RichTextLabel" parent="Footer" unique_id=148294172]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "[color=green]Client Connected[/color]"
+vertical_alignment = 1
+
+[node name="PingClientBtn" type="Button" parent="Footer" unique_id=1058940147]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Ping Client"
+
+[node name="DisconnectBtn" type="Button" parent="Footer" unique_id=371938243]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Disconnect"
+
+[node name="TabContainer" type="TabContainer" parent="." unique_id=1761200963]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 16.0
+offset_right = -24.0
+offset_bottom = -48.0
+grow_horizontal = 2
+grow_vertical = 2
+current_tab = 0
+tab_1/title = "Log"
+
+[node name="Control" type="Control" parent="TabContainer" unique_id=2140852466]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="TabContainer/Control" unique_id=1160043791]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="TabContainer/Control/SubViewportContainer" unique_id=2105932833]
+disable_3d = true
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1104, 553)
+render_target_update_mode = 4
+
+[node name="Camera2D" type="Camera2D" parent="TabContainer/Control/SubViewportContainer/SubViewport" unique_id=2121208163]
+anchor_mode = 0
+script = ExtResource("3_ewg0i")
+
+[node name="ForceDirectedGraph" type="Node2D" parent="TabContainer/Control/SubViewportContainer/SubViewport" unique_id=524092045]
+unique_name_in_owner = true
+position = Vector2(104, 81)
+script = ExtResource("2_ojf0c")
+frame_divide = 500
+metadata/_custom_type_script = "uid://bbo1hnrjwvtlg"
+
+[node name="ForcesCheckBox" type="CheckBox" parent="TabContainer/Control" unique_id=2104352583]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -104.0
+offset_top = 41.0
+offset_right = -16.0
+offset_bottom = 72.0
+grow_horizontal = 0
+button_pressed = true
+text = "Forces"
+
+[node name="ClearNodesBtn" type="Button" parent="TabContainer/Control" unique_id=16911372]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -112.0
+offset_top = 9.0
+offset_right = -10.0
+offset_bottom = 40.0
+grow_horizontal = 0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Clear Nodes"
+
+[node name="MsgLog" type="ItemList" parent="TabContainer" unique_id=1248007000]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+metadata/_tab_name = "Log"
+
+[node name="ClearLogBtn" type="Button" parent="TabContainer/MsgLog" unique_id=178060761]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -96.0
+offset_top = -40.0
+offset_right = -16.0
+offset_bottom = -9.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Clear Log"

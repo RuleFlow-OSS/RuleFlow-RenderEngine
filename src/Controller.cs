@@ -3,10 +3,10 @@ Types of command messages:
 (Server <> Client) - ping/pong
 (Server <- Client) - clear()
 (Server <- Client) - regress(n)
+TODO: implement a formal Enum class for command message types to clearly define what is allowed.
 */
 using Godot;
 using System;
-using System.Linq;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using RuleFlowRenderEngine.server;
@@ -90,7 +90,7 @@ public class Controller
                     switch (cm.Op)
                     {
                         case "ping":
-                            PingClient(op: "pong");
+                            PingClient(op: "pong", args: "Server Replies Hi!");
                             OnPingPongReceived?.Invoke(cm);
                             break;
                         case "pong":

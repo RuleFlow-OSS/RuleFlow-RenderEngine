@@ -9,7 +9,7 @@ signal connection_changed
 var connection: Line2D
 
 
-@export var length := 500.0
+@export var length := 200.0
 @export var K := 0.005
 @export var node_start: FDGNode : set = _connect_node_start
 @export var node_end: FDGNode : set = _connect_node_end
@@ -19,7 +19,8 @@ var connection: Line2D
 
 
 func _ready():
-	width = 2.0
+	width = 4.0
+	antialiased = true
 
 
 ## Connects the two nodes to the spring

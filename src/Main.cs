@@ -16,7 +16,7 @@ public partial class Main : Control
 	
 	// Access Fields
 	public ConnectView ConnectView;
-	public GraphView GraphView;
+	public EventView EventView;
 	
 	public override void _Ready()
 	{
@@ -25,10 +25,7 @@ public partial class Main : Control
 		
 		// Grab nodes
 		ConnectView = GetNode<ConnectView>("ConnectView");
-		GraphView = GetNode<GraphView>("GraphView");
-		
-		// Set defaults
-		OS.LowProcessorUsageMode = true;
+		EventView = GetNode<EventView>("GraphView");
 		
 		// wire up events
 		Controller.Server.OnConnected += Controller.Cft(() => SwitchViews("graph"));
@@ -41,12 +38,12 @@ public partial class Main : Control
 		{
 			case "connect":
 				ConnectView.Visible = true;
-				GraphView.Visible = false;
+				EventView.Visible = false;
 				break;
 			case "graph":
 				ConnectView.Visible = false;
-				GraphView.Visible = true;
-				GraphView.ViewStarted();
+				EventView.Visible = true;
+				EventView.ViewStarted();
 				break;
 		}
 	}

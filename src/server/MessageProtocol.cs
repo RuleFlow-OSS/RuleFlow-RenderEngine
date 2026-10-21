@@ -30,8 +30,10 @@ public abstract class Message
 /// </summary>
 public class EventMessage : Message
 {
-    public int Time { get; set; } = 0;
+    public int Idx { get; set; } = 0;
+    public int DistanceToCreation { get; set; } = 0;
     public List<int> Connected { get; set; } = [];
+    public List<int> Data { get; set; } = [];
 }
 
 /// <summary>

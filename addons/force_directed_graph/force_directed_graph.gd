@@ -51,6 +51,10 @@ func _process(delta: float):
 	if Engine.is_editor_hint() and not simulate_in_editor:
 		return
 	
+	# --- Purge any stale or queued-for-deletion nodes and springs ---
+	nodes = nodes.filter(func(n): return is_instance_valid(n) and not n.is_queued_for_deletion())
+	springs = springs.filter(func(s): return is_instance_valid(s) and not s.is_queued_for_deletion())
+	
 	if auto_frame_divide:
 		# Every 10 frames, check if a node has been moved, by taking the difference of the position delta and the accumulated velocity.
 		# This makes it update quicker if you move a node in the editor or set its position,
